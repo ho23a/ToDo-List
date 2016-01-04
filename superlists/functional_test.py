@@ -52,6 +52,8 @@ class NewVisitorTest(unittest.TestCase):
         # She visits that URL - her to-do list is still there
 
         # Satisfied, she goes back to sleep
+        # self reminder to finish the app
+        self.fail('Finish the app!')
 
     # test to verify the behavior
     #def test_can_log_in_to_a_new_account(self):
