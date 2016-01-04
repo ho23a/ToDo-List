@@ -6,10 +6,9 @@ class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-
         # after 3 seconds, if nothing executed, inform Failed
         self.browser.implicitly_wait(3)
-        
+
 
     def tearDown(self):
         self.browser.quit()
