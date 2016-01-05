@@ -24,7 +24,21 @@ class HomePageTest(TestCase):
         # strips() gets rid of white space in '</html>'
         #self.assertTrue(response.content.strips().endswith('</html>'))
 
+    def test_home_page_can_save_a_POST_request(self):
+        request = HttpRequest()
 
+        # POST to send data. Have to set method
+        request.method = 'POST'
+        request.POST['item_text'] = 'A new list item'
+
+        response = home_page(request)
+
+        self.assertIn('A new list item', response.content.decode())
+        expected_html = render_to_string(
+            'home.html', { 'new_item_text': 'A new list item'}
+        )
+        self.assertEqual(response.content.decode(), expected_html)
+        
 # class SmokeTest(TestCase):
 #     def test_bad_maths(self):
 #         self.assertEqual(1 + 1, 3)
