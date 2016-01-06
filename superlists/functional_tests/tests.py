@@ -56,13 +56,16 @@ class NewVisitorTest(LiveServerTestCase):
         # (Edith's hobby is tying fly-fishing lures)
         self.enter_a_new_item('Buy peacock feathers')
 
-        # When she hits enter, the page updates , and now the page lists
-        # "1. Buy peacock feathers" as an item in a to-do lists
+        # When she hits enter, she is taken to a new URL,
+        # and now the page lists "1. Buy peacock feathers"
+        # as an item in a to-do lists
 
         # wait 15 seconds to read error
         # import time
         # time.sleep(15)
 
+        edith_list_url = self.browser.current_url
+        self.assertRegexpMatches(edith_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1. Buy peacock feathers')
         # self.assertTrue(
         #     # quick and dirty way
@@ -79,6 +82,36 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('1. Buy peacock feathers')
         self.check_for_row_in_list_table('2. Use peacock feathers to make fly')
 
+        # Now a new user, Francis, comes along
+
+        ## We use a new browser session to make sure no information
+        ## of Edith's come along (E.g. cookies, localStorage)
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Francis visits the home page. There is no sign of Edith's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertNotIn('make a fly', page_text)
+
+        # Francis starts a new list by entering a new item
+        # He is less interesting than Edith
+        self.enter_a_new_item('Buy milk')
+
+        # Francis gets his own URL
+        francis_list_url = self.browser.current_url
+        self.assertRegexpMatches(francis_list_url, '/lists/.+')
+        self.assertNotEqual(francis_list_url, edith_list_url)
+
+        # There's still no trace of Edith's list
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+        self.assertIn('Buy milk', page_text)
+
+        # Satisfied, they both go back to sleep
+
+        # ______ DELETED _______
         # Edith wonders whether the site will remember her list. Then she sees
         # that the site has generated a unique URL for her -- there is some
         # explanatory text to that effect
@@ -87,7 +120,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Satisfied, she goes back to sleep
         # self reminder to finish the app
-        self.fail('Finish the app!')
+        # self.fail('Finish the app!')
 
     # test to verify the behavior
     #def test_can_log_in_to_a_new_account(self):
