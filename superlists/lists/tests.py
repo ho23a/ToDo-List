@@ -26,36 +26,44 @@ class HomePageTest(TestCase):
         # strips() gets rid of white space in '</html>'
         #self.assertTrue(response.content.strips().endswith('</html>'))
 
-    def test_home_page_doesnt_save_on_GET_request(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Item.objects.count(), 0)
+    # def test_home_page_doesnt_save_on_GET_request(self):
+        # request = HttpRequest()
+        # home_page(request)
+        # self.assertEqual(Item.objects.count(), 0)
 
-    def test_home_page_can_save_a_POST_request(self):
-        request = HttpRequest()
+class NewListTest(TestCase):
 
-        # POST to send data. Have to set method
-        request.method = 'POST'
-        request.POST['item_text'] = 'A new list item'
+    def test_saving_a_POST_request(self):
+        self.client.post(
+            '/lists/new', # convention: POST: no trailing slash to do action, GET: trailing slash
+            data={'item_text': 'A new list item'}
+        )
+        # request = HttpRequest()
+        # # POST to send data. Have to set method
+        # request.method = 'POST'
+        # request.POST['item_text'] = 'A new list item'
+        # response = home_page(request)
 
-        response = home_page(request)
-
-        # test if sadded a new item
+        # test if added a new item
         self.assertEqual(Item.objects.count(), 1)
         new_item = Item.objects.first()
         self.assertEqual(new_item.text, 'A new list item')
 
-    def test_home_page_redirects_after_POST(self):
-        request = HttpRequest()
+    def test_redirecting_after_POST(self):
+        response = self.client.post(
+            '/lists/new', # convention: POST: no trailing slash to do action, GET: trailing slash
+            data={'item_text': 'A new list item'}
+        )
+        # request = HttpRequest()
+        # # POST to send data. Have to set method
+        # request.method = 'POST'
+        # request.POST['item_text'] = 'A new list item'
+        # response = home_page(request)
 
-        # POST to send data. Have to set method
-        request.method = 'POST'
-        request.POST['item_text'] = 'A new list item'
-
-        response = home_page(request)
+        self.assertRedirects(response, '/lists/the-only-list/')
         # redirect's status code = 302
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/lists/the-only-list/')
+        # self.assertEqual(response.status_code, 302)
+        # self.assertEqual(response['location'], '/lists/the-only-list/')
 
         # test homepage render
         # self.assertIn('A new list item', response.content.decode())
@@ -82,6 +90,7 @@ class HomePageTest(TestCase):
 class ListViewTest(TestCase):
 
     def test_uses_list_template(self):
+        # GET request on the given URL
         response = self.client.get('/lists/the-only-list/')
         self.assertTemplateUsed(response, 'list.html')
 

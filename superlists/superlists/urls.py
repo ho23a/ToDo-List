@@ -20,6 +20,9 @@ from lists import views
 urlpatterns = [
     # r'^$' = empty String
     url(r'^$', views.home_page, name='home'),
-    url(r'^lists/the-only-list/$', views.view_list, name='view_list')
+    url(r'^lists/new$', views.new_list, name="new_list"), #no slash for POST
+    url(r'^lists/the-only-list/$', views.view_list, name='view_list'),
+
+    # url(r'^lists/.+/$', )
     # url(r'^admin/', admin.site.urls),
 ]
