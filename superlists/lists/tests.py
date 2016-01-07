@@ -2,7 +2,7 @@ from django.core.urlresolvers import resolve
 from django.template.loader import render_to_string
 from django.test import TestCase
 from django.http import HttpRequest
-from lists.models import Item
+from lists.models import Item, List
 from lists.views import home_page
 
 class HomePageTest(TestCase):
@@ -95,24 +95,33 @@ class ListViewTest(TestCase):
         self.assertTemplateUsed(response, 'list.html')
 
     def test_displays_all_items(self):
-        Item.objects.create(text='itemey 1')
-        Item.objects.create(text='itemey 2')
+        new_list = List.objects.create()
+        Item.objects.create(text='itemey 1', list=new_list)
+        Item.objects.create(text='itemey 2', list=new_list)
 
         response = self.client.get('/lists/the-only-list/')
 
         self.assertContains(response, 'itemey 1')
         self.assertContains(response, 'itemey 2')
 
-class ItemModelTest(TestCase):
-    def test_saving_and_retrieving_items(self):
+class ItemAndListModelsTest(TestCase):
+    def test_saving_and_retrieving_items_in_list(self):
+        new_list = List()
+        new_list.save()
+
         # get 2 new list items
         first_item = Item()
         first_item.text = 'The first (ever) list item'
+        first_item.list = new_list
         first_item.save()
 
         second_item = Item()
         second_item.text = "Item the second"
+        second_item.list = new_list
         second_item.save()
+
+        saved_list = List.objects.first()
+        self.assertEqual(new_list, saved_list)
 
         # get the list of all saved items
         saved_items = Item.objects.all()
@@ -122,3 +131,5 @@ class ItemModelTest(TestCase):
         second_saved_item = saved_items[1]
         self.assertEqual(first_saved_item.text, 'The first (ever) list item')
         self.assertEqual(second_saved_item.text, 'Item the second')
+        self.assertEqual(first_saved_item.list, new_list)
+        self.assertEqual(second_saved_item.list, new_list)
