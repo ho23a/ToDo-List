@@ -29,10 +29,11 @@ def view_list(request, list_id):
     # whatever between slashes lists/235901/ will be list_id
     list_ = List.objects.get(id=list_id) # find list with given list id. id is int
     # items: array of items in list_
-    items = Item.objects.filter(list=list_) # all saved items in list_
+    # items = Item.objects.filter(list=list_) # all saved items in list_
     return render(
         request, 'list.html',
-        { 'items': items, 'list': list_, }
+        # { 'items': items,
+        { 'list': list_, }
     )
 
 def add_item(request, list_id):
