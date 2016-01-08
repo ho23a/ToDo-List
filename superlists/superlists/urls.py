@@ -21,8 +21,8 @@ urlpatterns = [
     # r'^$' = empty String
     url(r'^$', views.home_page, name='home'),
     url(r'^lists/new$', views.new_list, name="new_list"), #no slash for POST
-    # (.+): capture group
-    url(r'^lists/(.+)/$', views.view_list, name='view_list'),
+    url(r'^lists/(\d+)/add_item$', views.add_item, name="add item"),
+    # (): capture group, \d: only match digits, .: any character
+    url(r'^lists/(\d+)/$', views.view_list, name='view_list'),
 
-    # url(r'^admin/', admin.site.urls),
 ]

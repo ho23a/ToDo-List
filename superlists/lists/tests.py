@@ -35,7 +35,8 @@ class NewListTest(TestCase):
 
     def test_saving_a_POST_request(self):
         self.client.post(
-            '/lists/new', # convention: POST: no trailing slash to do action, GET: trailing slash
+            '/lists/new', # convention: POST: no trailing slash to do action,
+            #GET: trailing slash
             data={'item_text': 'A new list item'}
         )
         # request = HttpRequest()
@@ -51,7 +52,7 @@ class NewListTest(TestCase):
 
     def test_redirecting_after_POST(self):
         response = self.client.post(
-            '/lists/new', # convention: POST: no trailing slash to do action, GET: trailing slash
+            '/lists/new',
             data={'item_text': 'A new list item'}
         )
         # request = HttpRequest()
@@ -88,6 +89,30 @@ class NewListTest(TestCase):
 #     def test_bad_maths(self):
 #         self.assertEqual(1 + 1, 3)
 
+class NewItemTest(TestCase):
+    def test_can_save_a_POST_request_to_an_existing_list(self):
+        correct_list = List.objects.create()
+
+        self.client.post(
+            '/lists/%d/add_item' % (correct_list.id,),
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        self.assertEqual(Item.objects.count(), 1)
+        new_item = Item.objects.first()
+        self.assertEqual(new_item.text, 'A new item for an existing list')
+        self.assertEqual(new_item.list, correct_list)
+
+    def test_redirects_to_list_view(self):
+        correct_list = List.objects.create()
+
+        response = self.client.post(
+            '/lists/%d/add_item' % (correct_list.id,),
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        self.assertRedirects(response, '/lists/%d/' % (correct_list.id,))
+
 class ListViewTest(TestCase):
 
     def test_uses_list_template(self):
@@ -112,6 +137,11 @@ class ListViewTest(TestCase):
         self.assertContains(response, 'itemey 2')
         self.assertNotContains(response, 'other item 1')
         self.assertNotContains(response, 'other item 2')
+
+    def test_passes_correct_list_to_template(self):
+        correct_list = List.objects.create()
+        response = self.client.get('/lists/%d/' % (correct_list.id,))
+        self.assertEqual(response.context['list'], correct_list)
 
 class ItemAndListModelsTest(TestCase):
     def test_saving_and_retrieving_items_in_list(self):
