@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 # import unittest
 
 # inside () is extends
-class NewVisitorTest(LiveServerTestCase):
+class NewVisitorTest(StaticLiveServerTestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
