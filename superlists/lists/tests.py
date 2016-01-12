@@ -85,9 +85,24 @@ class NewListTest(TestCase):
     #     self.assertIn('itemey 1', response.content.decode())
     #     self.assertIn('itemey 2', response.content.decode())
 
-# class SmokeTest(TestCase):
-#     def test_bad_maths(self):
-#         self.assertEqual(1 + 1, 3)
+class DeleteItemTest(TestCase):
+    def test_deleting_item(self):
+        correct_list = List.objects.create()
+        todelete = Item.objects.create(text='itemey 1', list=correct_list)
+        Item.objects.create(text='itemey 2', list=correct_list)
+        self.assertEqual(Item.objects.count(), 2)
+        # todelete.delete()
+
+        response = self.client.get('/lists/items/%d/delete_item' % (todelete.id,))
+
+        # WHY NOT WORK?
+        # self.assertNotContains(response, 'itemey 1')
+        # self.assertContains(response, 'itemey 2')
+
+        self.assertEqual(Item.objects.count(), 1)
+
+        # appropriate & necessary?
+        self.assertRedirects(response, '/lists/%d/' % (correct_list.id))
 
 class NewItemTest(TestCase):
     def test_can_save_a_POST_request_to_an_existing_list(self):
