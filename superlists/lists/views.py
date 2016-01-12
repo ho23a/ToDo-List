@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.shortcuts import render, redirect
 from lists.models import Item, List
 #from django.http import HttpResponse
@@ -22,7 +23,15 @@ def new_list(request):
     new_list = List.objects.create()
     # above method creates new list everytime POST, so final list only
     # has final item
-    Item.objects.create(text = request.POST['item_text'], list=new_list)
+    item = Item(text = request.POST['item_text'], list=new_list)
+    # If validation passes, redirect. Else, return to home page
+    try:
+        item.full_clean()
+        item.save() # only execute when validation passes
+    except ValidationError:
+        new_list.delete()
+        error = "You can't have an empty list item"
+        return render(request, 'home.html', {'error': error})
     return redirect('/lists/%d/' % (new_list.id,))
 
 def view_list(request, list_id):

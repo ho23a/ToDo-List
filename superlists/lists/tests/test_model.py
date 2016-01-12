@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from lists.models import Item, List
 
@@ -30,3 +31,20 @@ class ItemAndListModelsTest(TestCase):
         self.assertEqual(second_saved_item.text, 'Item the second')
         self.assertEqual(first_saved_item.list, new_list)
         self.assertEqual(second_saved_item.list, new_list)
+
+    def test_cannot_save_empty_list_items(self):
+        new_list = List.objects.create()
+        item = Item(list=new_list, text='')
+
+        # Two ways to write the followings:
+        # Long term way: everything in 'with' block should raise validation e
+        with self.assertRaises(ValidationError):
+            item.save() # Django doesn't run validation on save()
+            item.full_clean() # to run validation
+
+        # Naive way
+        # try:
+        #     item.save() #expect Validation error,
+        #     self.fail('The save should have raised an exception')
+        # except ValidationError:
+        #     pass
