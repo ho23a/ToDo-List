@@ -36,19 +36,18 @@ def new_list(request):
 
 def view_list(request, list_id):
     # whatever between slashes lists/235901/ will be list_id
-    list_ = List.objects.get(id=list_id) # find list with given list id. id is int
+    list_ = List.objects.get(id=list_id) # find list with given list id. id=int
+
+    if request.method == 'POST':
+        Item.objects.create(text=request.POST['item_text'], list=list_)
+
     # items: array of items in list_
     # items = Item.objects.filter(list=list_) # all saved items in list_
-    return render(
+    return render( # method == 'GET'
         request, 'list.html',
         # { 'items': items,
         { 'list': list_, }
     )
-
-def add_item(request, list_id):
-    list_ = List.objects.get(id=list_id)
-    Item.objects.create(text=request.POST['item_text'], list=list_)
-    return redirect('/lists/%d/' % (list_.id))
 
 def delete_item(request, item_id):
     item = Item.objects.get(id=item_id)
