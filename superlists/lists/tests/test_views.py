@@ -90,8 +90,6 @@ class DeleteItemTest(TestCase):
         correct_list = List.objects.create()
         todelete = Item.objects.create(text='itemey 1', list=correct_list)
         Item.objects.create(text='itemey 2', list=correct_list)
-        self.assertEqual(Item.objects.count(), 2)
-        # todelete.delete()
 
         response = self.client.get('/lists/items/%d/delete_item' % (todelete.id,))
 
@@ -157,33 +155,3 @@ class ListViewTest(TestCase):
         correct_list = List.objects.create()
         response = self.client.get('/lists/%d/' % (correct_list.id,))
         self.assertEqual(response.context['list'], correct_list)
-
-class ItemAndListModelsTest(TestCase):
-    def test_saving_and_retrieving_items_in_list(self):
-        new_list = List()
-        new_list.save()
-
-        # get 2 new list items
-        first_item = Item()
-        first_item.text = 'The first (ever) list item'
-        first_item.list = new_list
-        first_item.save()
-
-        second_item = Item()
-        second_item.text = "Item the second"
-        second_item.list = new_list
-        second_item.save()
-
-        saved_list = List.objects.first()
-        self.assertEqual(new_list, saved_list)
-
-        # get the list of all saved items
-        saved_items = Item.objects.all()
-        self.assertEqual(saved_items.count(), 2)
-
-        first_saved_item = saved_items[0]
-        second_saved_item = saved_items[1]
-        self.assertEqual(first_saved_item.text, 'The first (ever) list item')
-        self.assertEqual(second_saved_item.text, 'Item the second')
-        self.assertEqual(first_saved_item.list, new_list)
-        self.assertEqual(second_saved_item.list, new_list)
