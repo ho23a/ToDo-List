@@ -37,16 +37,22 @@ def new_list(request):
 def view_list(request, list_id):
     # whatever between slashes lists/235901/ will be list_id
     list_ = List.objects.get(id=list_id) # find list with given list id. id=int
+    error = None
 
     if request.method == 'POST':
-        Item.objects.create(text=request.POST['item_text'], list=list_)
+        try:
+            item = Item(text=request.POST['item_text'], list=list_)
+            item.full_clean()
+            item.save()
+        except ValidationError:
+            error = "You can't have an empty list item"
 
     # items: array of items in list_
     # items = Item.objects.filter(list=list_) # all saved items in list_
     return render( # method == 'GET'
         request, 'list.html',
         # { 'items': items,
-        { 'list': list_, }
+        { 'list': list_, 'error': error}
     )
 
 def delete_item(request, item_id):
