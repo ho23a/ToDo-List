@@ -58,6 +58,17 @@ class NewVisitorTest(TodoFunctionalTest):
         self.check_for_row_in_list_table('1. Buy peacock feathers')
         self.check_for_row_in_list_table('2. Use peacock feathers to make fly')
 
+        # Edith now deletes the first item (1. Buy peacock feathers)
+        # by clicking on it
+        todelete = self.browser.find_element_by_tag_name('a')
+        todelete.send_keys('Buy peacock feathers')
+        todelete.click()
+
+        # The homepage updates again and now show only 2. ..make fly in list
+        edith_page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', edith_page_text)
+        self.check_for_row_in_list_table('2. Use peacock feathers to make fly')
+
         # Now a new user, Francis, comes along
 
         ## We use a new browser session to make sure no information
