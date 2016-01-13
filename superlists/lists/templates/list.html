@@ -6,9 +6,13 @@
 {% block table %}
     <table id="id_list_table" class="table">
       {% for item in list.item_set.all %}
-        <tr><td>{{ forloop.counter }}.</td><td>{{ item.text }}
-          <td><a href="/lists/items/{{ item.id }}/delete_item">Delete</a>
-          </td></td></tr>
+        <tr>
+          <td>{{ forloop.counter }}.</td>
+          <td><input type="checkbox" /></td>
+          <td>{{ item.text }}
+            <td><a href="/lists/items/{{ item.id }}/delete_item">Delete</a></td>
+          </td>
+        </tr>
       {% endfor %}
     </table>
 {% endblock %}

@@ -42,7 +42,7 @@ class NewVisitorTest(TodoFunctionalTest):
 
         edith_list_url = self.browser.current_url
         self.assertRegexpMatches(edith_list_url, '/lists/.+')
-        self.check_for_row_in_list_table('1. Buy peacock feathers')
+        self.check_for_row_in_list_table('Buy peacock feathers')
         # self.assertTrue(
         #     # quick and dirty way
         #     any(row.text == '1. Buy peacock feathers' for row in rows),
@@ -55,8 +55,8 @@ class NewVisitorTest(TodoFunctionalTest):
         self.enter_a_new_item('Use peacock feathers to make fly')
 
         # The homepage updates again and now shows both items on her lists
-        self.check_for_row_in_list_table('1. Buy peacock feathers')
-        self.check_for_row_in_list_table('2. Use peacock feathers to make fly')
+        self.check_for_row_in_list_table('Buy peacock feathers')
+        self.check_for_row_in_list_table('Use peacock feathers to make fly')
 
         # Edith now deletes the first item (1. Buy peacock feathers)
         # by clicking on it
@@ -66,8 +66,8 @@ class NewVisitorTest(TodoFunctionalTest):
 
         # The homepage updates again and now show only 2. ..make fly in list
         edith_page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('1. Buy peacock feathers', edith_page_text)
-        self.check_for_row_in_list_table('1. Use peacock feathers to make fly')
+        self.assertNotIn('Buy peacock feathers', edith_page_text)
+        self.check_for_row_in_list_table('Use peacock feathers to make fly')
 
         # Now a new user, Francis, comes along
 

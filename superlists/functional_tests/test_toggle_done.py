@@ -3,7 +3,9 @@ from selenium import webdriver
 
 class ToggleDoneTest(TodoFunctionalTest):
     def toggle_todo_done(self, todo_text):
-        pass
+        row = self.find_table_row(todo_text)
+        row.find_element_by_tag_name('input').click()
+        self.browser.find_element_by_id('toggle_done')
 
     def check_marked_off(self, todo_text):
         pass
@@ -34,7 +36,7 @@ class ToggleDoneTest(TodoFunctionalTest):
         self.check_marked_off('Buy peacock feathers')
         self.check_marked_off('Buy fishing line')
 
-        # She adds a todo item to tie her flies
+        # She adds a todo item to tie her flys
         # and marks them as done after a nice afternoon of tying
         self.enter_a_new_item('Tie some flys')
         self.check_marked_off('Buy peacock feathers')

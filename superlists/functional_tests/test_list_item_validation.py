@@ -9,7 +9,7 @@ class ItemValidationTest(TodoFunctionalTest):
         # She hits Enter on the empty input box
         self.browser.get(self.live_server_url)
         self.enter_a_new_item('')
-  
+
         # The home page refreshes, adn there is an error message
         # saying that list items cannot be blank
         error = self.browser.find_element_by_css_selector('.has-error')
@@ -18,7 +18,7 @@ class ItemValidationTest(TodoFunctionalTest):
         # She tries again with some text for the item,
         # which now works
         self.enter_a_new_item('Buy milk')
-        self.check_for_row_in_list_table('1. Buy milk')
+        self.check_for_row_in_list_table('Buy milk')
 
         # Perversely, she tries to enter a second blank items
         self.enter_a_new_item('')
@@ -29,8 +29,8 @@ class ItemValidationTest(TodoFunctionalTest):
 
         # And she can correct it by filling some text in
         self.enter_a_new_item('Make tea')
-        self.check_for_row_in_list_table('1. Buy milk')
-        self.check_for_row_in_list_table('2. Make tea')
+        self.check_for_row_in_list_table('Buy milk')
+        self.check_for_row_in_list_table('Make tea')
 
         # Satisfied, they both go back to sleep
 
