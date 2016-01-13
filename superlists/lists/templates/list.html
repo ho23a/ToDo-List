@@ -14,7 +14,7 @@
             name="mark_item_done"
             value="{{ item.id }}"/>
           </td>
-          <td>{{ item.text }}
+          <td {% if item.is_done %}class="todo-done"{% endif %}>{{ item.text }}
             <td><a href="/lists/items/{{ item.id }}/delete_item">Delete</a></td>
           </td>
         </tr>
