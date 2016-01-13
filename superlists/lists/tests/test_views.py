@@ -106,7 +106,7 @@ class DeleteItemTest(TestCase):
 
         response = self.client.get('/lists/items/%d/delete_item' % (todelete.id,))
 
-        # WHY NOT WORK?
+        # WHY NOT WORK? 302 != 200
         # self.assertNotContains(response, 'itemey 1')
         # self.assertContains(response, 'itemey 2')
 

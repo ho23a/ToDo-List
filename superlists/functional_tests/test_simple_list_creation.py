@@ -67,7 +67,7 @@ class NewVisitorTest(TodoFunctionalTest):
         # The homepage updates again and now show only 2. ..make fly in list
         edith_page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('1. Buy peacock feathers', edith_page_text)
-        self.check_for_row_in_list_table('2. Use peacock feathers to make fly')
+        self.check_for_row_in_list_table('1. Use peacock feathers to make fly')
 
         # Now a new user, Francis, comes along
 
