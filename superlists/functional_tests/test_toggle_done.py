@@ -16,7 +16,15 @@ class ToggleDoneTest(TodoFunctionalTest):
         except NoSuchElementException:
             self.fail("%s not marked done!" % (todo_text))
 
-    def test_can_toggle_finished_items(self):
+    def check_not_marked_off(self, todo_text):
+        try:
+            self.check_marked_off(todo_text)
+        except:
+            return # return when exceptions in check marked off
+        # fails when check marked off succeeded
+        self.fail("'%s' is marked done!" % (todo_text))
+
+    def test_can_mark_finished_items(self):
         # Edith makes a quick shopping list
         # noticing a checkbox to toggle done item
         self.browser.get(self.live_server_url) # go to the page
@@ -48,3 +56,34 @@ class ToggleDoneTest(TodoFunctionalTest):
         self.check_marked_off('Buy fishing line')
         self.toggle_todo_done(['Tie some flys'])
         self.check_marked_off('Tie some flys')
+
+    def test_can_mark_finished_items(self):
+        # Edith's ties flying hobby is booming,
+        # and she wants a list that she can use over and over
+        self. browser.get(self.live_server_url)
+        self.enter_a_new_item('Buy feathers')
+        self.enter_a_new_item('Buy fishing line')
+        self.enter_a_new_item('Buy sparkles')
+
+        # She looks in her closet, and already has fishing line
+        self.toggle_todo_done(['Buy fishing line'])
+        self.check_marked_off('Buy fishing line')
+
+        # She goes to the store and finishes shopping
+        self.toggle_todo_done([
+            'Buy feathers',
+            'Buy sparkles'
+        ])
+        self.check_marked_off('Buy feathers')
+        self.check_marked_off('Buy fishing line')
+        self.check_marked_off('Buy sparkles')
+
+        # She makes some flys, and her closet is empty
+        self.toggle_todo_done([
+            'Buy feathers',
+            'Buy fishing line',
+            'Buy sparkles'
+        ])
+        self.check_not_marked_off('Buy feathers')
+        self.check_not_marked_off('Buy fishing line')
+        self.check_not_marked_off('Buy sparkles')

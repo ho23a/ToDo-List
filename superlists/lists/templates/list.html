@@ -12,7 +12,9 @@
           <td>
             <input type="checkbox"
             name="mark_item_done"
-            value="{{ item.id }}"/>
+            value="{{ item.id }}"
+            {% if item.is_done %}checked="checked"{% endif %}
+            />
           </td>
           <td {% if item.is_done %}class="todo-done"{% endif %}>
             {{ item.text }}
@@ -21,7 +23,11 @@
         </tr>
       {% endfor %}
     </table>
-    <button id="toggle_done" type="submit">Mark Done</button>
+    <button
+      id="toggle_done"
+      type="submit"
+      class="btn btn-primary"
+    >Toggle Done</button>
     {% csrf_token %}
   </form>
 {% endblock %}
