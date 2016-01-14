@@ -2,7 +2,7 @@
 from django.db import models
 
 class List(models.Model):
-    pass
+    name = models.TextField(default='')
 
 # models.Model extension gives Item the methods (e.g. save() )
 class Item(models.Model):

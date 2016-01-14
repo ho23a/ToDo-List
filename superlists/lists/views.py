@@ -40,13 +40,17 @@ def view_list(request, list_id):
     error = None
 
     if request.method == 'POST':
-        try:
-            item = Item(text=request.POST['item_text'], list=list_)
-            item.full_clean()
-            item.save()
-        except ValidationError:
-            error = "You can't have an empty list item"
-
+        if request.POST.has_key('item_text'):
+            try:
+                item = Item(text=request.POST['item_text'], list=list_)
+                item.full_clean()
+                item.save()
+            except ValidationError:
+                error = "You can't have an empty list item"
+        if request.POST.has_key('list_name'):
+            list_.name = request.POST['list_name']
+            list_.save()
+            
     # items: array of items in list_
     # items = Item.objects.filter(list=list_) # all saved items in list_
     return render( # method == 'GET'
@@ -61,7 +65,7 @@ def edit_list(request, list_id):
     for item in list_.item_set.all():
         item.is_done=False
         item.save()
-        
+
     item_ids = request.POST.getlist('mark_item_done')
     for item_id in item_ids:
         item = Item.objects.get(id=item_id)
