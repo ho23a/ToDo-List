@@ -13,7 +13,8 @@ def home_page(request):
     #     Item.objects.create(text = request.POST['item_text'])
     #     return redirect('/lists/the-only-list/') # redirect if POST
 
-    return render(request, 'home.html')
+    # inside {} is context
+    return render(request, 'home.html', {'todo_lists': List.objects.all()})
     #return HttpResponse('<html><title>To-Do lists</title></html>')
 
 # not a function
@@ -50,7 +51,7 @@ def view_list(request, list_id):
         if request.POST.has_key('list_name'):
             list_.name = request.POST['list_name']
             list_.save()
-            
+
     # items: array of items in list_
     # items = Item.objects.filter(list=list_) # all saved items in list_
     return render( # method == 'GET'

@@ -27,6 +27,18 @@ class HomePageTest(TestCase):
         # strips() gets rid of white space in '</html>'
         #self.assertTrue(response.content.strips().endswith('</html>'))
 
+    def test_home_page_has_todo_lists(self):
+        list1 = List.objects.create(name="List 1")
+        list2 = List.objects.create(name="List 2")
+
+        response = self.client.get('/')
+
+        context = response.context['todo_lists']
+        self.assertEqual(len(context), 2)
+        self.assertEqual(context[0], list1)
+        self.assertEqual(context[1], list2)
+        # self.assertListEqual(response.context['todo_lists'], List.objects.all())
+
     # def test_home_page_doesnt_save_on_GET_request(self):
         # request = HttpRequest()
         # home_page(request)
