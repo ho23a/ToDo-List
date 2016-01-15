@@ -21,10 +21,11 @@ def home_page(request):
 # home_page = None
 
 def new_list(request):
-    new_list = List.objects.create()
+    item_text = request.POST['item_text']
+    new_list = List.objects.create(name=item_text)
     # above method creates new list everytime POST, so final list only
     # has final item
-    item = Item(text = request.POST['item_text'], list=new_list)
+    item = Item(text=item_text, list=new_list)
     # If validation passes, redirect. Else, return to home page
     try:
         item.full_clean()

@@ -99,7 +99,16 @@ class NewListTest(TestCase):
         self.assertEqual(List.objects.count(), 0)
         self.assertEqual(Item.objects.count(), 0)
 
-    # homepage now displays list, not all items
+    def test_new_list_has_name_of_first_item(self):
+        response = self.client.post(
+            '/lists/new',
+            data={'item_text': 'A new lists item'}
+        )
+
+        new_list = List.objects.first()
+        self.assertEqual(new_list.name, 'A new lists item')
+
+    # remove because homepage now displays list, not all items
     # def test_home_page_displays_all_items(self):
     #     Item.objects.create(text='itemey 1')
     #     Item.objects.create(text='itemey 2')
