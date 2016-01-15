@@ -2,7 +2,10 @@ from .base import TodoFunctionalTest
 
 class ManyListsTest(TodoFunctionalTest):
     def change_list_name(self, list_name):
-        pass
+        inputbox = self.browser.find_element_by_id('id_rename_list')
+        inputbox.clear() # clear form
+        inputbox.send_keys(list_name + '\n')
+
 
     def test_can_create_and_view_multiple_lists(self):
         # Edith comes to the home page, creates a new list,
